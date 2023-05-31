@@ -13,7 +13,7 @@ print(f"Using device: {device}")
 transform = transforms.Compose([
     transforms.Resize((256, 256)),
     transforms.ToTensor(),
-    transforms.random_crop((224,224))
+    transforms.RandomCrop((224,224))
 ])
 
 # Set the paths
