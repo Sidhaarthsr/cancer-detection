@@ -8,6 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import ToTensor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from torch.utils.tensorboard import SummaryWriter
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -109,8 +110,19 @@ print("Computation Device:", device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+# Specify the path to save/load the model
+model_path = "./saved_model.pt"
+
+# Load the saved model if it exists
+if os.path.exists(model_path):
+    model.load_state_dict(torch.load(model_path))
+    print("Saved model loaded.")
+
+# Create a SummaryWriter for TensorBoard visualization
+writer = SummaryWriter()
+
 # Training loop
-for epoch in range(10):
+for epoch in range(35):
     model.train()
     running_loss = 0.0
     for images, labels in train_loader:
@@ -127,6 +139,38 @@ for epoch in range(10):
 
     # Print the average training loss for each epoch
     print(f"Epoch {epoch+1} - Loss: {running_loss / len(train_loader)}")
+
+    # Write the training loss to TensorBoard
+    writer.add_scalar("Loss/train", running_loss / len(train_loader), epoch)
+
+    # Evaluate for each epoch
+    model.eval()
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for images, labels in test_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
+            outputs = model(images)
+        
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+    # Calculate the accuracy on the test set
+    accuracy = correct / total
+    print("Accuracy:", accuracy)
+
+    # Write the accuracy to TensorBoard
+    writer.add_scalar("Accuracy/test", accuracy, epoch)
+
+# Save the trained model
+torch.save(model.state_dict(), model_path)
+print("Model saved.")
+
+# Close the SummaryWriter
+writer.close()
 
 # Evaluation
 model.eval()
