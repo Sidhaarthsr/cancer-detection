@@ -5,22 +5,23 @@ from torchvision.transforms import transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 from data_loader import load_data
-from model import Modelv1, Modelv2
+from model import Modelv3
 import timeit
 from util import train_loop, validation
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 flag = torch.cuda.device_count()
-model = Modelv1()
-if flag>1:
-    model = nn.DataParallel(model)
-model.to(device)
+
 lr = [.01, .001, .0001]
 bs = [32, 64, 128, 256, 512]
 print("Starting Training")
 for x in bs:
     train_loader, val_loader = load_data(data_dir = "./LungColon", batch_size = x, num_workers = 8)
     for y in lr:
+        model = Modelv3()
+        if flag>1:
+            model = nn.DataParallel(model)
+        model.to(device)
         print(f"Using Learning Rate : {y},  Using Batch Size : {x}")
         criterion = nn.CrossEntropyLoss()
         if flag>1:
