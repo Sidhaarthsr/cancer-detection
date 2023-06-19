@@ -59,7 +59,7 @@ class Modelv3(nn.Module):
         self.res2 = nn.Conv2d(32, 128, kernel_size=1, stride=1)
         self.conv5 = nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1)
         self.bn5 = nn.BatchNorm2d(256)
-        self.dropout = nn.Dropout2d(0.8)
+        self.dropout = nn.Dropout2d(0.2)
         self.maxpool = nn.MaxPool2d(kernel_size=2, stride=2)
         self.fc1 = nn.Linear(256*56*56, 128)
         self.fc2 = nn.Linear(128, 5)
@@ -68,13 +68,13 @@ class Modelv3(nn.Module):
         out = F.relu(self.conv1(x))
         out = F.relu(self.bn2(self.conv2(out)))
         residual = self.bn2(self.res1(x))
-        out = out + residual
+        out = out + residual                    ## residual connection
         out = self.maxpool(out)
         residual = out
         out = F.relu(self.bn3(self.conv3(out)))
         out = F.relu(self.bn4(self.conv4(out)))
         residual = self.bn4((self.res2(residual)))
-        out = out + residual
+        out = out + residual                    ## residual connection
         out = F.relu(self.bn5(self.conv5(out)))
         out = self.maxpool(out)
         out = self.dropout(out)
