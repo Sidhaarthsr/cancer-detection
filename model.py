@@ -88,11 +88,11 @@ class Modelv4(nn.Module):
     def __init__(self):
         super(Modelv4, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
-        self.bn1 = nn.BatchNorm2D(16)
+        self.bn1 = nn.BatchNorm2d(16)
         self.relu1 = nn.ReLU()
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-        self.bn2 = nn.BatchNorm2D(32)
+        self.bn2 = nn.BatchNorm2d(32)
         self.relu2 = nn.ReLU()
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
         self.fc1 = nn.Linear(32 * 56 * 56, 128)
