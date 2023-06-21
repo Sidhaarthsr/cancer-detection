@@ -80,7 +80,6 @@ class Modelv3(nn.Module):
         out = self.dropout(out)
         out = out.view(out.size(0), -1)
         out = self.fc1(out)
-        out = self.dropout(out)
         out = self.fc2(out)
         return out
 
