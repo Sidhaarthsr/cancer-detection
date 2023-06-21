@@ -1,0 +1,96 @@
+import os
+import cv2
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from skimage.feature import graycomatrix, graycoprops
+from sklearn.model_selection import train_test_split
+
+# Specify the path to your image dataset
+dataset_path = "./LungColon"
+
+# Initialize empty lists for storing image features and labels
+features = []
+labels = []
+image_paths = []
+
+# Define the desired image size
+image_size = (256, 256)
+
+# Dictionary to store grayscale images per class
+class_images = {}
+
+# Iterate through each folder in the dataset directory
+for folder_name in os.listdir(dataset_path):
+    folder_path = os.path.join(dataset_path, folder_name)
+    if os.path.isdir(folder_path):
+        # Iterate through each image file in the folder
+        for image_name in os.listdir(folder_path):
+            image_path = os.path.join(folder_path, image_name)
+            if os.path.isfile(image_path):
+                # Read the image and resize it to the desired size
+                image = cv2.imread(image_path)
+                image = cv2.resize(image, image_size)
+
+                # Convert the image to grayscale
+                gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+                # Calculate grayscale histogram
+                hist_gray = cv2.calcHist([gray_image], [0], None, [256], [0, 256]).flatten()
+
+                # Add the grayscale histogram to the features list
+                features.append(hist_gray)
+                # Add the label (parent folder name) to the labels list
+                labels.append(folder_name)
+                # Store the image path for later use
+                image_paths.append(image_path)
+
+                # Add grayscale image to class_images dictionary
+                if folder_name not in class_images:
+                    class_images[folder_name] = gray_image
+
+# Convert the features and labels to NumPy arrays
+features = np.array(features)
+labels = np.array(labels)
+
+# Perform label encoding on the class labels
+label_encoder = LabelEncoder()
+labels = label_encoder.fit_transform(labels)
+
+# Split the dataset into training and testing sets
+train_features, test_features, train_labels, test_labels, train_image_paths, test_image_paths = train_test_split(
+    features, labels, image_paths, test_size=0.3, random_state=42)
+
+# Create an instance of the decision tree classifier
+clf = DecisionTreeClassifier()
+
+# Train the decision tree classifier
+clf.fit(train_features, train_labels)
+
+# Make predictions on the test set
+predictions = clf.predict(test_features)
+
+# Convert labels and predictions back to original class names
+test_labels = label_encoder.inverse_transform(test_labels)
+predictions = label_encoder.inverse_transform(predictions)
+
+print("Test Labels:", test_labels)
+print("Predictions:", predictions)
+
+# Print the image paths along with the corresponding predictions
+for i in range(len(test_image_paths)):
+    print("Image Path:", test_image_paths[i])
+    print("Prediction:", predictions[i])
+    print()
+
+# Calculate and print metrics
+accuracy = accuracy_score(test_labels, predictions)
+precision = precision_score(test_labels, predictions, average='weighted')
+recall = recall_score(test_labels, predictions, average='weighted')
+f1 = f1_score(test_labels, predictions, average='weighted')
+
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)
