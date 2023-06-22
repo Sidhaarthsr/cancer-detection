@@ -5,10 +5,12 @@ from torchvision.transforms import transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 from data_loader import load_data
-from model import Modelv3
+from model import Modelv1, Modelv2, Modelv3, Modelv4
 import timeit
 from util import train_loop, validation
 
+data_dir = "./LungColon"
+model = Modelv2()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 flag = torch.cuda.device_count()
 
@@ -16,9 +18,9 @@ lr = [.01, .001, .0001]
 bs = [32, 64, 128, 256, 512]
 print("Starting Training")
 for x in bs:
-    train_loader, val_loader = load_data(data_dir = "./LungColon", batch_size = x, num_workers = 8)
+    train_loader, val_loader = load_data(data_dir = data_dir, batch_size = x, num_workers = 8)
     for y in lr:
-        model = Modelv3()
+        model = model
         if flag>1:
             model = nn.DataParallel(model)
         model.to(device)
