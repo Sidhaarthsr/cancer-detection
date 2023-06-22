@@ -94,7 +94,7 @@ under creative commons license.
 Contributions:
 
 `Shail Shah <https://github.com/shail2512-lm10>`_, `Atif Bilal <https://github.com/imatif17>`_, 
-`Siddharth <https://github.com/Sidhaarthsr>`_, `Raj <https://github.com/raj8421>`_,
+`Sidhaarth Saraswathi Ramalingam <https://github.com/Sidhaarthsr>`_, `Raj <https://github.com/raj8421>`_,
 `Arash Azarfar <https://github.com/arazarfar>`_, `Y A Joarder <https://github.com/yajoarder>`_,
 `Soorena <https://github.com/soorena374>`_, `Farzhad <https://github.com/FzS92>`_,
 
