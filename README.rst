@@ -60,11 +60,15 @@ Specify the ``dataset_path`` in the ``cancer_detection_dtree_semi_supervised.py`
 
 **3. DNN Models:**
 
-To Train the model, specify the ``data_dir`` and ``model`` in the training loop of the file ``experiment.py``. 
+There are total 4 models available in the ``model.py``: Modelv1, Modelv2, Modelv3, Modelv4
+
+To Train the model, specify the ``data_dir`` and ``model`` in the python file ``experiment.py``. 
+
+Then, specify the ``data_dir`` in the python file ``data_loader.py``.
 
 Then, run the file ``experiment.py``
 
-There are total 4 models available in the ``model.py``: Modelv1, Modelv2, Modelv3, Modelv4
+
 
 
 
