@@ -10,6 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from torchvision.transforms import transforms
 
+data_dir = "./LungColon"
 
 class ImageDataset(Dataset):
     def __init__(self, data_paths, labels, transform=None):
@@ -29,7 +30,7 @@ class ImageDataset(Dataset):
             image = self.transform(image)
         return image, label
 
-def load_data(data_dir = "./LungColon", batch_size = 128,num_workers = 2):
+def load_data(data_dir = data_dir, batch_size = 128,num_workers = 2):
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Resize((256, 256)),
